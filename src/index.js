@@ -1,5 +1,3 @@
-import anySeries from './any-series';
-import any from './any';
 import eachRightSeries from './each-right-series';
 import eachRight from './each-right';
 import eachSeries from './each-series';
@@ -27,8 +25,6 @@ import throws from './throws';
 import unpack from './unpack';
 
 export {
-  anySeries,
-  any,
   eachRightSeries,
   eachRight,
   eachSeries,

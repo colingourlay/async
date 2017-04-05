@@ -81,9 +81,25 @@ var reduce = (function () {
 })();
 
 function not(fn) {
-  return function () {
-    return !fn.apply(undefined, arguments);
-  };
+  return asyncToGenerator(regeneratorRuntime.mark(function _callee() {
+    var _args = arguments;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return fn.apply(undefined, _args);
+
+          case 2:
+            return _context.abrupt("return", !_context.sent);
+
+          case 3:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, this);
+  }));
 }
 
 function proxy(items) {

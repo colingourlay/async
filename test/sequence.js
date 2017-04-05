@@ -2,22 +2,8 @@ const test = require('tape');
 
 const sequence = require('../packages/async-cjs/sequence');
 const {
-  wait,
-  willResolve,
-  willResolveAfterTimeout,
-  willReject,
-  willRejectAfterTimeout,
-  willThrow,
-  willAlsoThrow,
-  thirdFnWillReject,
-  add,
-  joinSpaced
-} = require('./functions');
-const {
-  NUMBERS,
   SUM,
   NUMBER_ADDING_FNS,
-  WORDS,
   SENTENCE,
   WORD_JOINING_FNS
 } = require('./constants');
@@ -26,14 +12,14 @@ test('sequence', function (t) {
   t.plan(3);
 
   sequence(NUMBER_ADDING_FNS, 0)
-  .then(result => t.equal(result, SUM, `Added all numbers together.`))
+  .then(result => t.equal(result, SUM, 'Added all numbers together.'))
   .catch(err => t.fail(err));
 
   sequence(NUMBER_ADDING_FNS, 15)
-  .then(result => t.equal(result, SUM + 15, `Added all numbers to input.`))
+  .then(result => t.equal(result, SUM + 15, 'Added all numbers to input.'))
   .catch(err => t.fail(err));
 
   sequence(WORD_JOINING_FNS, 'A sentence:')
-  .then(result => t.equal(result, 'A sentence: ' + SENTENCE, `Joined all words to accumulator.`))
+  .then(result => t.equal(result, `A sentence: ${SENTENCE}`, 'Joined all words to accumulator.'))
   .catch(err => t.fail(err));
 });

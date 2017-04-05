@@ -1,5 +1,3 @@
-import anySeries from './any-series';
-import any from './any';
 import eachRightSeries from './each-right-series';
 import eachRight from './each-right';
 import eachSeries from './each-series';
@@ -26,4 +24,4 @@ import some from './some';
 import throws from './throws';
 import unpack from './unpack';
 
-export { anySeries, any, eachRightSeries, eachRight, eachSeries, each, everySeries, every, filterSeries, filter, mapSeries, map, pack, packs, parallel, reduceRightSeries, reduceRight, reduceSeries, reduce, rejectSeries, reject, sequence, series, someSeries, some, throws, unpack };
+export { eachRightSeries, eachRight, eachSeries, each, everySeries, every, filterSeries, filter, mapSeries, map, pack, packs, parallel, reduceRightSeries, reduceRight, reduceSeries, reduce, rejectSeries, reject, sequence, series, someSeries, some, throws, unpack };

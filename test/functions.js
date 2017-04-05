@@ -1,6 +1,6 @@
-function wait(ms = 0) {
+function wait(ms) {
   return new Promise((resolve, reject) => {
-    setTimeout(resolve, ms);
+    setTimeout(resolve, typeof ms === 'number' ? ms : Math.random() * 100);
   });
 }
 
@@ -43,15 +43,21 @@ function identity(x) {
   });
 }
 
+function conditional(fn) {
+  return x => new Promise(resolve => {
+    wait().then(() => resolve(fn(x)));
+  });
+}
+
 function add(a, b) {
   return new Promise(resolve => {
     wait().then(() => resolve(parseInt(a + b)));
   });
 }
 
-function addProp(a, b) {
+function addValue(a, b) {
   return new Promise(resolve => {
-    wait(Math.random() * 100).then(() => resolve(a.prop = parseInt(a.prop + b), a));
+    wait().then(() => resolve(a.value = parseInt(a.value + b), a));
   });
 }
 
@@ -61,9 +67,9 @@ function joinSpaced(a, b) {
   });
 }
 
-function joinSpacedProp(a, b) {
+function joinSpacedValue(a, b) {
   return new Promise(resolve => {
-    wait(Math.random() * 100).then(() => resolve(a.prop = [a.prop, b].join(a.prop.length ? ' ' : ''), a));
+    wait().then(() => resolve(a.value = [a.value, b].join(a.value.length ? ' ' : ''), a));
   });
 }
 
@@ -76,8 +82,9 @@ module.exports = {
   willThrow,
   thirdFnWillReject,
   identity,
+  conditional,
   add,
-  addProp,
+  addValue,
   joinSpaced,
-  joinSpacedProp
+  joinSpacedValue
 };

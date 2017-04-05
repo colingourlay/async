@@ -52,11 +52,19 @@ var reduceSeries = (() => {
 
 var mapSeries = (() => {
   var _ref = asyncToGenerator(function* (items, fn) {
-    return reduceSeries(items, function (acc, item, index, items) {
-      acc[index] = fn(item, index, items);
+    let reducer = (() => {
+      var _ref2 = asyncToGenerator(function* (acc, item, index, items) {
+        acc[index] = yield fn(item, index, items);
 
-      return acc;
-    });
+        return acc;
+      });
+
+      return function reducer(_x3, _x4, _x5, _x6) {
+        return _ref2.apply(this, arguments);
+      };
+    })();
+
+    return reduceSeries(items, reducer, []);
   });
 
   function mapSeries(_x, _x2) {
@@ -64,102 +72,6 @@ var mapSeries = (() => {
   }
 
   return mapSeries;
-})();
-
-function invoke(fn, ...args) {
-  return fn(args);
-}
-
-function not(fn) {
-  return (...args) => !fn(...args);
-}
-
-function proxy(items) {
-  return (_, key) => items[key];
-}
-
-var filterSeries = (() => {
-  var _ref = asyncToGenerator(function* (items, fn) {
-    return items.filter(proxy((yield mapSeries(items, fn))));
-  });
-
-  function filterSeries(_x, _x2) {
-    return _ref.apply(this, arguments);
-  }
-
-  return filterSeries;
-})();
-
-var anySeries = (() => {
-  var _ref = asyncToGenerator(function* (items, fn) {
-    return (yield filterSeries(items, fn)).length > 0;
-  });
-
-  function anySeries(_x, _x2) {
-    return _ref.apply(this, arguments);
-  }
-
-  return anySeries;
-})();
-
-var reduce = (() => {
-  var _ref = asyncToGenerator(function* (items, fn, acc) {
-    if (typeof acc === 'undefined' || acc === null || typeof acc !== 'object') {
-      return acc;
-    }
-
-    yield Promise.all(items.map(function (item, index) {
-      return fn(acc, item, index, items);
-    }, acc));
-
-    return acc;
-  });
-
-  function reduce(_x, _x2, _x3) {
-    return _ref.apply(this, arguments);
-  }
-
-  return reduce;
-})();
-
-var map = (() => {
-  var _ref = asyncToGenerator(function* (items, fn) {
-    return items.map(proxy((yield reduce(items, function (acc, item, index, items) {
-      acc[index] = fn(item, index, items);
-
-      return acc;
-    }, {}))));
-  });
-
-  function map(_x, _x2) {
-    return _ref.apply(this, arguments);
-  }
-
-  return map;
-})();
-
-var filter = (() => {
-  var _ref = asyncToGenerator(function* (items, fn) {
-    return items.filter(proxy((yield map(items, fn))));
-  });
-
-  function filter(_x, _x2) {
-    return _ref.apply(this, arguments);
-  }
-
-  return filter;
-})();
-
-var any = (() => {
-  var _ref = asyncToGenerator(function* (items, fn) {
-    return (yield filter(items, fn)).length > 0;
-  });
-
-  function any(_x, _x2) {
-    return _ref.apply(this, arguments);
-  }
-
-  return any;
 })();
 
 var eachSeries = (() => {
@@ -186,6 +98,62 @@ var eachRightSeries = (() => {
   return eachRightSeries;
 })();
 
+var reduce = (() => {
+  var _ref = asyncToGenerator(function* (items, fn, acc) {
+    if (typeof acc === 'undefined' || acc === null || typeof acc !== 'object') {
+      return acc;
+    }
+
+    yield Promise.all(items.map(function (item, index) {
+      return fn(acc, item, index, items);
+    }, acc));
+
+    return acc;
+  });
+
+  function reduce(_x, _x2, _x3) {
+    return _ref.apply(this, arguments);
+  }
+
+  return reduce;
+})();
+
+function invoke(fn, ...args) {
+  return fn(args);
+}
+
+function not(fn) {
+  return (() => {
+    var _ref = asyncToGenerator(function* (...args) {
+      return !(yield fn(...args));
+    });
+
+    return function () {
+      return _ref.apply(this, arguments);
+    };
+  })();
+}
+
+function proxy(items) {
+  return (_, key) => items[key];
+}
+
+var map = (() => {
+  var _ref = asyncToGenerator(function* (items, fn) {
+    return items.map(proxy((yield reduce(items, function (acc, item, index, items) {
+      acc[index] = fn(item, index, items);
+
+      return acc;
+    }, {}))));
+  });
+
+  function map(_x, _x2) {
+    return _ref.apply(this, arguments);
+  }
+
+  return map;
+})();
+
 var each = (() => {
   var _ref = asyncToGenerator(function* (items, fn) {
     yield map(items, fn);
@@ -210,6 +178,18 @@ var eachRight = (() => {
   return eachRight;
 })();
 
+var filterSeries = (() => {
+  var _ref = asyncToGenerator(function* (items, fn) {
+    return items.filter(proxy((yield mapSeries(items, fn))));
+  });
+
+  function filterSeries(_x, _x2) {
+    return _ref.apply(this, arguments);
+  }
+
+  return filterSeries;
+})();
+
 var everySeries = (() => {
   var _ref = asyncToGenerator(function* (items, fn) {
     return (yield filterSeries(items, fn)).length === items.length;
@@ -220,6 +200,18 @@ var everySeries = (() => {
   }
 
   return everySeries;
+})();
+
+var filter = (() => {
+  var _ref = asyncToGenerator(function* (items, fn) {
+    return items.filter(proxy((yield map(items, fn))));
+  });
+
+  function filter(_x, _x2) {
+    return _ref.apply(this, arguments);
+  }
+
+  return filter;
 })();
 
 var every = (() => {
@@ -364,4 +356,4 @@ function unpack(packed, ignoreErrors) {
   return ignoreErrors ? packed[1] : throws(packed)[1];
 }
 
-export { anySeries, any, eachRightSeries, eachRight, eachSeries, each, everySeries, every, filterSeries, filter, mapSeries, map, pack, packs, parallel, reduceRightSeries, reduceRight, reduceSeries, reduce, rejectSeries, reject, sequence, series, someSeries, some, throws, unpack };
+export { eachRightSeries, eachRight, eachSeries, each, everySeries, every, filterSeries, filter, mapSeries, map, pack, packs, parallel, reduceRightSeries, reduceRight, reduceSeries, reduce, rejectSeries, reject, sequence, series, someSeries, some, throws, unpack };

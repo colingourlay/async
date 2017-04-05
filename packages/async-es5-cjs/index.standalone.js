@@ -96,23 +96,45 @@ var reduceSeries = (function () {
 })();
 
 var mapSeries = (function () {
-  var _ref = asyncToGenerator(regeneratorRuntime.mark(function _callee(items, fn) {
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            return _context.abrupt('return', reduceSeries(items, function (acc, item, index, items) {
-              acc[index] = fn(item, index, items);
+  var _ref = asyncToGenerator(regeneratorRuntime.mark(function _callee2(items, fn) {
+    var reducer = function () {
+      var _ref2 = asyncToGenerator(regeneratorRuntime.mark(function _callee(acc, item, index, items) {
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return fn(item, index, items);
 
-              return acc;
-            }));
+              case 2:
+                acc[index] = _context.sent;
+                return _context.abrupt('return', acc);
+
+              case 4:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      return function reducer(_x3, _x4, _x5, _x6) {
+        return _ref2.apply(this, arguments);
+      };
+    }();
+
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            return _context2.abrupt('return', reduceSeries(items, reducer, []));
 
           case 1:
           case 'end':
-            return _context.stop();
+            return _context2.stop();
         }
       }
-    }, _callee, this);
+    }, _callee2, this);
   }));
 
   function mapSeries(_x, _x2) {
@@ -120,216 +142,6 @@ var mapSeries = (function () {
   }
 
   return mapSeries;
-})();
-
-function invoke(fn) {
-  for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    args[_key - 1] = arguments[_key];
-  }
-
-  return fn(args);
-}
-
-function not(fn) {
-  return function () {
-    return !fn.apply(undefined, arguments);
-  };
-}
-
-function proxy(items) {
-  return function (_, key) {
-    return items[key];
-  };
-}
-
-var filterSeries = (function () {
-  var _ref = asyncToGenerator(regeneratorRuntime.mark(function _callee(items, fn) {
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.t0 = items;
-            _context.t1 = proxy;
-            _context.next = 4;
-            return mapSeries(items, fn);
-
-          case 4:
-            _context.t2 = _context.sent;
-            _context.t3 = (0, _context.t1)(_context.t2);
-            return _context.abrupt('return', _context.t0.filter.call(_context.t0, _context.t3));
-
-          case 7:
-          case 'end':
-            return _context.stop();
-        }
-      }
-    }, _callee, this);
-  }));
-
-  function filterSeries(_x, _x2) {
-    return _ref.apply(this, arguments);
-  }
-
-  return filterSeries;
-})();
-
-var anySeries = (function () {
-  var _ref = asyncToGenerator(regeneratorRuntime.mark(function _callee(items, fn) {
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return filterSeries(items, fn);
-
-          case 2:
-            _context.t0 = _context.sent.length;
-            return _context.abrupt('return', _context.t0 > 0);
-
-          case 4:
-          case 'end':
-            return _context.stop();
-        }
-      }
-    }, _callee, this);
-  }));
-
-  function anySeries(_x, _x2) {
-    return _ref.apply(this, arguments);
-  }
-
-  return anySeries;
-})();
-
-var reduce = (function () {
-  var _ref = asyncToGenerator(regeneratorRuntime.mark(function _callee(items, fn, acc) {
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            if (!(typeof acc === 'undefined' || acc === null || (typeof acc === 'undefined' ? 'undefined' : _typeof(acc)) !== 'object')) {
-              _context.next = 2;
-              break;
-            }
-
-            return _context.abrupt('return', acc);
-
-          case 2:
-            _context.next = 4;
-            return Promise.all(items.map(function (item, index) {
-              return fn(acc, item, index, items);
-            }, acc));
-
-          case 4:
-            return _context.abrupt('return', acc);
-
-          case 5:
-          case 'end':
-            return _context.stop();
-        }
-      }
-    }, _callee, this);
-  }));
-
-  function reduce(_x, _x2, _x3) {
-    return _ref.apply(this, arguments);
-  }
-
-  return reduce;
-})();
-
-var map = (function () {
-  var _ref = asyncToGenerator(regeneratorRuntime.mark(function _callee(items, fn) {
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.t0 = items;
-            _context.t1 = proxy;
-            _context.next = 4;
-            return reduce(items, function (acc, item, index, items) {
-              acc[index] = fn(item, index, items);
-
-              return acc;
-            }, {});
-
-          case 4:
-            _context.t2 = _context.sent;
-            _context.t3 = (0, _context.t1)(_context.t2);
-            return _context.abrupt('return', _context.t0.map.call(_context.t0, _context.t3));
-
-          case 7:
-          case 'end':
-            return _context.stop();
-        }
-      }
-    }, _callee, this);
-  }));
-
-  function map(_x, _x2) {
-    return _ref.apply(this, arguments);
-  }
-
-  return map;
-})();
-
-var filter = (function () {
-  var _ref = asyncToGenerator(regeneratorRuntime.mark(function _callee(items, fn) {
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.t0 = items;
-            _context.t1 = proxy;
-            _context.next = 4;
-            return map(items, fn);
-
-          case 4:
-            _context.t2 = _context.sent;
-            _context.t3 = (0, _context.t1)(_context.t2);
-            return _context.abrupt('return', _context.t0.filter.call(_context.t0, _context.t3));
-
-          case 7:
-          case 'end':
-            return _context.stop();
-        }
-      }
-    }, _callee, this);
-  }));
-
-  function filter(_x, _x2) {
-    return _ref.apply(this, arguments);
-  }
-
-  return filter;
-})();
-
-var any = (function () {
-  var _ref = asyncToGenerator(regeneratorRuntime.mark(function _callee(items, fn) {
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return filter(items, fn);
-
-          case 2:
-            _context.t0 = _context.sent.length;
-            return _context.abrupt('return', _context.t0 > 0);
-
-          case 4:
-          case 'end':
-            return _context.stop();
-        }
-      }
-    }, _callee, this);
-  }));
-
-  function any(_x, _x2) {
-    return _ref.apply(this, arguments);
-  }
-
-  return any;
 })();
 
 var eachSeries = (function () {
@@ -380,6 +192,114 @@ var eachRightSeries = (function () {
   return eachRightSeries;
 })();
 
+var reduce = (function () {
+  var _ref = asyncToGenerator(regeneratorRuntime.mark(function _callee(items, fn, acc) {
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            if (!(typeof acc === 'undefined' || acc === null || (typeof acc === 'undefined' ? 'undefined' : _typeof(acc)) !== 'object')) {
+              _context.next = 2;
+              break;
+            }
+
+            return _context.abrupt('return', acc);
+
+          case 2:
+            _context.next = 4;
+            return Promise.all(items.map(function (item, index) {
+              return fn(acc, item, index, items);
+            }, acc));
+
+          case 4:
+            return _context.abrupt('return', acc);
+
+          case 5:
+          case 'end':
+            return _context.stop();
+        }
+      }
+    }, _callee, this);
+  }));
+
+  function reduce(_x, _x2, _x3) {
+    return _ref.apply(this, arguments);
+  }
+
+  return reduce;
+})();
+
+function invoke(fn) {
+  for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    args[_key - 1] = arguments[_key];
+  }
+
+  return fn(args);
+}
+
+function not(fn) {
+  return asyncToGenerator(regeneratorRuntime.mark(function _callee() {
+    var _args = arguments;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return fn.apply(undefined, _args);
+
+          case 2:
+            return _context.abrupt("return", !_context.sent);
+
+          case 3:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, this);
+  }));
+}
+
+function proxy(items) {
+  return function (_, key) {
+    return items[key];
+  };
+}
+
+var map = (function () {
+  var _ref = asyncToGenerator(regeneratorRuntime.mark(function _callee(items, fn) {
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.t0 = items;
+            _context.t1 = proxy;
+            _context.next = 4;
+            return reduce(items, function (acc, item, index, items) {
+              acc[index] = fn(item, index, items);
+
+              return acc;
+            }, {});
+
+          case 4:
+            _context.t2 = _context.sent;
+            _context.t3 = (0, _context.t1)(_context.t2);
+            return _context.abrupt('return', _context.t0.map.call(_context.t0, _context.t3));
+
+          case 7:
+          case 'end':
+            return _context.stop();
+        }
+      }
+    }, _callee, this);
+  }));
+
+  function map(_x, _x2) {
+    return _ref.apply(this, arguments);
+  }
+
+  return map;
+})();
+
 var each = (function () {
   var _ref = asyncToGenerator(regeneratorRuntime.mark(function _callee(items, fn) {
     return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -428,6 +348,37 @@ var eachRight = (function () {
   return eachRight;
 })();
 
+var filterSeries = (function () {
+  var _ref = asyncToGenerator(regeneratorRuntime.mark(function _callee(items, fn) {
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.t0 = items;
+            _context.t1 = proxy;
+            _context.next = 4;
+            return mapSeries(items, fn);
+
+          case 4:
+            _context.t2 = _context.sent;
+            _context.t3 = (0, _context.t1)(_context.t2);
+            return _context.abrupt('return', _context.t0.filter.call(_context.t0, _context.t3));
+
+          case 7:
+          case 'end':
+            return _context.stop();
+        }
+      }
+    }, _callee, this);
+  }));
+
+  function filterSeries(_x, _x2) {
+    return _ref.apply(this, arguments);
+  }
+
+  return filterSeries;
+})();
+
 var everySeries = (function () {
   var _ref = asyncToGenerator(regeneratorRuntime.mark(function _callee(items, fn) {
     return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -455,6 +406,37 @@ var everySeries = (function () {
   }
 
   return everySeries;
+})();
+
+var filter = (function () {
+  var _ref = asyncToGenerator(regeneratorRuntime.mark(function _callee(items, fn) {
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.t0 = items;
+            _context.t1 = proxy;
+            _context.next = 4;
+            return map(items, fn);
+
+          case 4:
+            _context.t2 = _context.sent;
+            _context.t3 = (0, _context.t1)(_context.t2);
+            return _context.abrupt('return', _context.t0.filter.call(_context.t0, _context.t3));
+
+          case 7:
+          case 'end':
+            return _context.stop();
+        }
+      }
+    }, _callee, this);
+  }));
+
+  function filter(_x, _x2) {
+    return _ref.apply(this, arguments);
+  }
+
+  return filter;
 })();
 
 var every = (function () {
@@ -731,8 +713,6 @@ function unpack(packed, ignoreErrors) {
   return ignoreErrors ? packed[1] : throws(packed)[1];
 }
 
-exports.anySeries = anySeries;
-exports.any = any;
 exports.eachRightSeries = eachRightSeries;
 exports.eachRight = eachRight;
 exports.eachSeries = eachSeries;

@@ -50,7 +50,15 @@ var reduce = (() => {
 })();
 
 function not(fn) {
-  return (...args) => !fn(...args);
+  return (() => {
+    var _ref = asyncToGenerator(function* (...args) {
+      return !(yield fn(...args));
+    });
+
+    return function () {
+      return _ref.apply(this, arguments);
+    };
+  })();
 }
 
 function proxy(items) {

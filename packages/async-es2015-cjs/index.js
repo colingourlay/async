@@ -3,15 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.unpack = exports.throws = exports.some = exports.someSeries = exports.series = exports.sequence = exports.reject = exports.rejectSeries = exports.reduce = exports.reduceSeries = exports.reduceRight = exports.reduceRightSeries = exports.parallel = exports.packs = exports.pack = exports.map = exports.mapSeries = exports.filter = exports.filterSeries = exports.every = exports.everySeries = exports.each = exports.eachSeries = exports.eachRight = exports.eachRightSeries = exports.any = exports.anySeries = undefined;
-
-var _anySeries = require('./any-series');
-
-var _anySeries2 = _interopRequireDefault(_anySeries);
-
-var _any = require('./any');
-
-var _any2 = _interopRequireDefault(_any);
+exports.unpack = exports.throws = exports.some = exports.someSeries = exports.series = exports.sequence = exports.reject = exports.rejectSeries = exports.reduce = exports.reduceSeries = exports.reduceRight = exports.reduceRightSeries = exports.parallel = exports.packs = exports.pack = exports.map = exports.mapSeries = exports.filter = exports.filterSeries = exports.every = exports.everySeries = exports.each = exports.eachSeries = exports.eachRight = exports.eachRightSeries = undefined;
 
 var _eachRightSeries = require('./each-right-series');
 
@@ -115,8 +107,6 @@ var _unpack2 = _interopRequireDefault(_unpack);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.anySeries = _anySeries2.default;
-exports.any = _any2.default;
 exports.eachRightSeries = _eachRightSeries2.default;
 exports.eachRight = _eachRight2.default;
 exports.eachSeries = _eachSeries2.default;

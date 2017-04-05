@@ -14,31 +14,21 @@ async function reduceSeries(items, fn, acc) {
 }
 
 async function mapSeries(items, fn) {
-  return reduceSeries(items, (acc, item, index, items) => {
-    acc[index] = fn(item, index, items);
+  async function reducer(acc, item, index, items) {
+    acc[index] = await fn(item, index, items);
 
     return acc;
-  });
+  }
+
+  return reduceSeries(items, reducer, []);
 }
 
-function invoke(fn, ...args) {
-  return fn(args);
+async function eachSeries(items, fn) {
+  await mapSeries(items, fn);
 }
 
-function not(fn) {
-  return (...args) => !fn(...args);
-}
-
-function proxy(items) {
-  return (_, key) => items[key];
-}
-
-async function filterSeries(items, fn) {
-  return items.filter(proxy(await mapSeries(items, fn)));
-}
-
-async function anySeries(items, fn) {
-  return (await filterSeries(items, fn)).length > 0;
+async function eachRightSeries(items, fn) {
+  await eachSeries([].concat(items).reverse(), fn);
 }
 
 async function reduce(items, fn, acc) {
@@ -53,28 +43,26 @@ async function reduce(items, fn, acc) {
   return acc;
 }
 
+function invoke(fn, ...args) {
+  return fn(args);
+}
+
+function not(fn) {
+  return async function (...args) {
+    return !(await fn(...args));
+  };
+}
+
+function proxy(items) {
+  return (_, key) => items[key];
+}
+
 async function map(items, fn) {
   return items.map(proxy(await reduce(items, (acc, item, index, items) => {
     acc[index] = fn(item, index, items);
 
     return acc;
   }, {})));
-}
-
-async function filter(items, fn) {
-  return items.filter(proxy(await map(items, fn)));
-}
-
-async function any(items, fn) {
-  return (await filter(items, fn)).length > 0;
-}
-
-async function eachSeries(items, fn) {
-  await mapSeries(items, fn);
-}
-
-async function eachRightSeries(items, fn) {
-  await eachSeries([].concat(items).reverse(), fn);
 }
 
 async function each(items, fn) {
@@ -85,8 +73,16 @@ async function eachRight(items, fn) {
   await each([].concat(items).reverse(), fn);
 }
 
+async function filterSeries(items, fn) {
+  return items.filter(proxy(await mapSeries(items, fn)));
+}
+
 async function everySeries(items, fn) {
   return (await filterSeries(items, fn)).length === items.length;
+}
+
+async function filter(items, fn) {
+  return items.filter(proxy(await map(items, fn)));
 }
 
 async function every(items, fn) {
@@ -153,4 +149,4 @@ function unpack(packed, ignoreErrors) {
   return ignoreErrors ? packed[1] : throws(packed)[1];
 }
 
-export { anySeries, any, eachRightSeries, eachRight, eachSeries, each, everySeries, every, filterSeries, filter, mapSeries, map, pack, packs, parallel, reduceRightSeries, reduceRight, reduceSeries, reduce, rejectSeries, reject, sequence, series, someSeries, some, throws, unpack };
+export { eachRightSeries, eachRight, eachSeries, each, everySeries, every, filterSeries, filter, mapSeries, map, pack, packs, parallel, reduceRightSeries, reduceRight, reduceSeries, reduce, rejectSeries, reject, sequence, series, someSeries, some, throws, unpack };

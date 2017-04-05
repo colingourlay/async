@@ -11,7 +11,9 @@ async function reduce(items, fn, acc) {
 }
 
 function not(fn) {
-  return (...args) => !fn(...args);
+  return async function (...args) {
+    return !(await fn(...args));
+  };
 }
 
 function proxy(items) {

@@ -4,11 +4,19 @@ import reduceSeries from './reduce-series';
 
 export default (() => {
   var _ref = _asyncToGenerator(function* (items, fn) {
-    return reduceSeries(items, function (acc, item, index, items) {
-      acc[index] = fn(item, index, items);
+    let reducer = (() => {
+      var _ref2 = _asyncToGenerator(function* (acc, item, index, items) {
+        acc[index] = yield fn(item, index, items);
 
-      return acc;
-    });
+        return acc;
+      });
+
+      return function reducer(_x3, _x4, _x5, _x6) {
+        return _ref2.apply(this, arguments);
+      };
+    })();
+
+    return reduceSeries(items, reducer, []);
   });
 
   function mapSeries(_x, _x2) {

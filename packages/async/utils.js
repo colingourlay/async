@@ -3,7 +3,9 @@ export function invoke(fn, ...args) {
 }
 
 export function not(fn) {
-  return (...args) => !fn(...args);
+  return async function (...args) {
+    return !(await fn(...args));
+  };
 }
 
 export function proxy(items) {

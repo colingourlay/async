@@ -11,10 +11,8 @@ const {
 const {
   NUMBERS,
   SUM,
-  NUMBER_ADDING_FNS,
   WORDS,
-  SENTENCE,
-  WORD_JOINING_FNS
+  SENTENCE
 } = require('./constants');
 
 test('reduce-series', function (t) {
@@ -39,18 +37,18 @@ test('reduce-series', function (t) {
   .catch(err => t.pass(err));
 
   reduceSeries(NUMBERS, add)
-  .then(result => t.equal(result, SUM, `Added all numbers together.`))
+  .then(result => t.equal(result, SUM, 'Added all numbers together.'))
   .catch(err => t.fail(err));
 
   reduceSeries(NUMBERS, add, 15)
-  .then(result => t.equal(result, SUM + 15, `Added all numbers to accumulator.`))
+  .then(result => t.equal(result, SUM + 15, 'Added all numbers to accumulator.'))
   .catch(err => t.fail(err));
 
   reduceSeries(WORDS, joinSpaced)
-  .then(result => t.equal(result, SENTENCE, `Joined all words together.`))
+  .then(result => t.equal(result, SENTENCE, 'Joined all words together.'))
   .catch(err => t.fail(err));
 
   reduceSeries(WORDS, joinSpaced, 'A sentence:')
-  .then(result => t.equal(result, 'A sentence: ' + SENTENCE, `Joined all words to accumulator.`))
+  .then(result => t.equal(result, `A sentence: ${SENTENCE}`, 'Joined all words to accumulator.'))
   .catch(err => t.fail(err));
 });

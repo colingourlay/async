@@ -1,7 +1,7 @@
 {
   "name": "@colingourlay/async-es2015",
   "desciription": "A collection of async helper functions, transpiled to ES2015 (ES6), in ES Module format.",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "main": "index.js",
   "module": "index.js",
   "jsnext:main": "index.js"

@@ -1,0 +1,8 @@
+{
+  "name": "@colingourlay/async",
+  "desciription": "A collection of async helper functions, in ES Module format.",
+  "version": "0.0.0",
+  "main": "index.js",
+  "module": "index.js",
+  "jsnext:main": "index.js"
+}

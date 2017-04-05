@@ -1,0 +1,6 @@
+{
+  "name": "@colingourlay/async-cjs",
+  "desciription": "A collection of async helper functions, in CommonJS format.",
+  "version": "0.0.0",
+  "main": "index.js"
+}

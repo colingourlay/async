@@ -1,7 +1,7 @@
 {
   "name": "@colingourlay/async-cjs",
   "desciription": "A collection of async helper functions, in CommonJS format.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "repository": "colingourlay/async-cjs",
   "main": "index.js"

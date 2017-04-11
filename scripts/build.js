@@ -121,6 +121,7 @@ Object.keys(ES_VERSIONS).forEach(esVersion => {
     const basePath = `${PACKAGES}/${name}`;
     const pkgPath = `${basePath}/package.json`;
     const npmrcPath = `${basePath}/.npmrc`;
+    const readmePath = `${basePath}/README.md`;
     const babelConfig = {
       babelrc: false,
       plugins: moduleFormat === COMMON_JS ? [
@@ -153,6 +154,17 @@ Object.keys(ES_VERSIONS).forEach(esVersion => {
     task = task.then(() => {
       mkdirpath(npmrcPath);
       writeFileSync(npmrcPath, 'access=public');
+
+      return Promise.resolve();
+    });
+
+    task = task.then(() => {
+      mkdirpath(readmePath);
+      writeFileSync(readmePath, `# ${PROJECT_NAME}
+
+A bunch of helper functions for working with collections and control flow in the age of \`Promises\` and \`async\`/\`await\`.
+
+Pre-compiled for use in ${ES_VERSIONS[esVersion].name} projects using the ${MODULE_FORMATS[moduleFormat].name} module format. Tree-shaken standalone bundles included.`);
 
       return Promise.resolve();
     });

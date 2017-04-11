@@ -1,6 +1,6 @@
 // require('./each-right--series');
 // require('./each-right');
-// require('./each-series');
+require('./each-series');
 // require('./each');
 // require('./every-series');
 // require('./every');

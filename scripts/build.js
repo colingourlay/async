@@ -47,6 +47,7 @@ const MODULE_FORMATS = {
     name: 'CommonJS'
   }
 };
+const NUM_COMBINATIONS = Object.keys(ES_VERSIONS).length * Object.keys(MODULE_FORMATS).length;
 
 function mkdirpath(path) {
 	const dir = dirname(path);
@@ -98,10 +99,20 @@ function build({
   });
 }
 
+let progressCounter = 0;
+
+function progress(esVersion, moduleFormat, wasBuilt) {
+  console.log(`${++progressCounter}/${NUM_COMBINATIONS} ${wasBuilt ? 'Built' : 'Noped'} ${esVersion}:${moduleFormat}`);
+}
+
 Object.keys(ES_VERSIONS).forEach(esVersion => {
   Object.keys(MODULE_FORMATS).forEach(moduleFormat => {
     if (esVersion === ES5 && moduleFormat === ES_MODULES) {
-      return;
+      return task = task.then(() => {
+        progress(esVersion, moduleFormat);
+
+        return Promise.resolve();
+      });
     }
 
     const name = `${PROJECT_NAME}${ES_VERSIONS[esVersion].isDefault ?
@@ -129,6 +140,8 @@ Object.keys(ES_VERSIONS).forEach(esVersion => {
   "name": "${PROJECT_SCOPE}/${name}",
   "desciription": "A collection of async helper functions${ES_VERSIONS[esVersion].isDefault ? '' : `, transpiled to ${ES_VERSIONS[esVersion].name}`}, in ${MODULE_FORMATS[moduleFormat].name} format.",
   "version": "${version}",
+  "license": "MIT",
+  "repository": "${PROJECT_SCOPE.slice(1)}/${name}",
   "main": "index.js"${moduleFormat === ES_MODULES ? `,
   "module": "index.js",
   "jsnext:main": "index.js"` : ''}
@@ -154,6 +167,12 @@ Object.keys(ES_VERSIONS).forEach(esVersion => {
         babelConfig,
         rollupBabelConfig
       });
+    });
+
+    task = task.then(() => {
+      progress(esVersion, moduleFormat, true);
+
+      return Promise.resolve();
     });
   });
 });

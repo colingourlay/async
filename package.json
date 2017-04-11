@@ -17,6 +17,7 @@
     "chokidar-cli": "^1.2.0",
     "del": "^2.2.2",
     "lerna": "2.0.0-beta.38",
+    "npm-run-all": "^4.0.2",
     "rollup": "^0.41.4",
     "rollup-plugin-async": "^1.2.0",
     "rollup-plugin-babel": "^2.6.1",
@@ -25,8 +26,10 @@
   },
   "scripts": {
     "build": "node scripts/build",
-    "start": "chokidar 'src' --command 'npm run build' --initial --silent",
-    "test": "node test && xo"
+    "start": "run-p -r watch:*",
+    "test": "xo && node test",
+    "watch:src": "chokidar 'src' --command 'npm run build'",
+    "watch:test": "chokidar 'test' --command 'npm test'"
   },
   "xo": {
     "envs": [
